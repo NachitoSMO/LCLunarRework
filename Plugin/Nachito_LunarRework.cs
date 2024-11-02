@@ -6,6 +6,7 @@ namespace Nachito.LunarRework
 {
     [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
     [BepInDependency(StaticNetcodeLib.StaticNetcodeLib.Guid)]
+    [BepInDependency("atomic.terminalapi")]
     public class Nachito_LunarRework : BaseUnityPlugin
     {
         public static Nachito_LunarRework Instance { get; private set; } = null!;
@@ -16,10 +17,10 @@ namespace Nachito.LunarRework
         {
             Logger = base.Logger;
             Instance = this;
-
             Patch();
 
             Logger.LogInfo($"{PluginInfo.PLUGIN_GUID} v{PluginInfo.PLUGIN_VERSION} has loaded!");
+            
         }
 
         internal static void Patch()

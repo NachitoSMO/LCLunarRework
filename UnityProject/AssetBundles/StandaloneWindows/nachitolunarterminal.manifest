@@ -1,0 +1,24 @@
+ManifestFileVersion: 0
+CRC: 1827384141
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: aabeb88afa314bf1032c6db4fe453913
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: ef4d0d3125cb8d1101f22bcbf92d046e
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: aabeb88afa314bf1032c6db4fe453913
+HashAppended: 0
+ClassTypes:
+- Class: 114
+  Script: {fileID: 11500000, guid: 0e80ae96b3eb9177eea5c8f9dadbcda1, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/ModAssets/NachitoLunarRework/Nodes/RebirthInfoTN.asset
+- Assets/ModAssets/NachitoLunarRework/Nodes/NachitoRebirthTN.asset
+- Assets/ModAssets/NachitoLunarRework/Nodes/NachitoRebirthTNConfirm.asset
+Dependencies: []

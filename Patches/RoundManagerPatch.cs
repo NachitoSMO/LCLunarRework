@@ -1,5 +1,6 @@
 ﻿using GameNetcodeStuff;
 using HarmonyLib;
+using static Nachito.LunarRework.Patches.MoonPenaltyPatch;
 
 namespace Nachito.LunarRework.Patches
 {
@@ -11,7 +12,41 @@ namespace Nachito.LunarRework.Patches
         [HarmonyPostfix]
         static void SaveStuff(PlayerControllerB __instance)
         {
-            if (!__instance.IsHost)
+            SaveEverything(__instance);
+            ChangeScrapAmounts();
+
+        }
+
+        public static void ChangeScrapAmounts()
+        {
+            titanHardCap = titanHardCap * (MoonPricePatch.rebirthAmount + 1);
+            dineHardCap = dineHardCap * (MoonPricePatch.rebirthAmount + 1);
+            rendHardCap = rendHardCap * (MoonPricePatch.rebirthAmount + 1);
+            adaHardCap = adaHardCap * (MoonPricePatch.rebirthAmount + 1);
+            marchHardCap = marchHardCap * (MoonPricePatch.rebirthAmount + 1);
+            offHardCap = offHardCap * (MoonPricePatch.rebirthAmount + 1);
+            vowHardCap = vowHardCap * (MoonPricePatch.rebirthAmount + 1);
+            assHardCap = assHardCap * (MoonPricePatch.rebirthAmount + 1);
+            expHardCap = expHardCap * (MoonPricePatch.rebirthAmount + 1);
+            embHardCap = embHardCap * (MoonPricePatch.rebirthAmount + 1);
+            artHardCap = artHardCap * (MoonPricePatch.rebirthAmount + 1);
+
+            titanScrapMultiplier = titanScrapMultiplier * (MoonPricePatch.rebirthAmount + 1);
+            dineScrapMultiplier = dineScrapMultiplier * (MoonPricePatch.rebirthAmount + 1);
+            rendScrapMultiplier = rendScrapMultiplier * (MoonPricePatch.rebirthAmount + 1);
+            adaScrapMultiplier = adaScrapMultiplier * (MoonPricePatch.rebirthAmount + 1);
+            marchScrapMultiplier = marchScrapMultiplier * (MoonPricePatch.rebirthAmount + 1);
+            offScrapMultiplier = offScrapMultiplier * (MoonPricePatch.rebirthAmount + 1);
+            vowScrapMultiplier = vowScrapMultiplier * (MoonPricePatch.rebirthAmount + 1);
+            assScrapMultiplier = assScrapMultiplier * (MoonPricePatch.rebirthAmount + 1);
+            expScrapMultiplier = expScrapMultiplier * (MoonPricePatch.rebirthAmount + 1);
+            embScrapMultiplier = embScrapMultiplier * (MoonPricePatch.rebirthAmount + 1);
+            artScrapMultiplier = artScrapMultiplier * (MoonPricePatch.rebirthAmount + 1);
+        }
+
+        public static void SaveEverything(PlayerControllerB __instance)
+        {
+            if (!__instance.isHostPlayerObject)
                 return;
 
             currentSave = GameNetworkManager.Instance.currentSaveFileName;
@@ -20,218 +55,251 @@ namespace Nachito.LunarRework.Patches
 
             if (ES3.KeyExists("TitanScrap", currentSave))
             {
-                if (ES3.Load<int>("TitanScrap", currentSave) < MoonPenaltyPatch.titanHardCap)
+                if (ES3.Load<int>("TitanScrap", currentSave) < titanHardCap)
                 {
-                    MoonPenaltyPatch.timesNotVisitedTitan = ES3.Load<int>("TitanScrap", currentSave);
+                    timesNotVisitedTitan = ES3.Load<int>("TitanScrap", currentSave);
                 }
                 else
                 {
-                    ES3.Save("TitanScrap", MoonPenaltyPatch.titanHardCap, currentSave);
-                    MoonPenaltyPatch.timesNotVisitedTitan = MoonPenaltyPatch.titanHardCap;
+                    ES3.Save("TitanScrap", titanHardCap, currentSave);
+                    timesNotVisitedTitan = titanHardCap;
                 }
             }
             else
             {
                 ES3.Save("TitanScrap", 0, currentSave);
-                MoonPenaltyPatch.timesNotVisitedTitan = 0;
+                timesNotVisitedTitan = 0;
             }
 
             if (ES3.KeyExists("ArtScrap", currentSave))
             {
-                if (ES3.Load<int>("ArtScrap", currentSave) < MoonPenaltyPatch.artHardCap)
+                if (ES3.Load<int>("ArtScrap", currentSave) < artHardCap)
                 {
-                    MoonPenaltyPatch.timesNotVisitedArtifice = ES3.Load<int>("ArtScrap", currentSave);
+                    timesNotVisitedArtifice = ES3.Load<int>("ArtScrap", currentSave);
                 }
                 else
                 {
-                    ES3.Save("ArtScrap", MoonPenaltyPatch.artHardCap, currentSave);
-                    MoonPenaltyPatch.timesNotVisitedArtifice = MoonPenaltyPatch.artHardCap;
+                    ES3.Save("ArtScrap", artHardCap, currentSave);
+                    timesNotVisitedArtifice = artHardCap;
                 }
             }
             else
             {
                 ES3.Save("ArtScrap", 0, currentSave);
-                MoonPenaltyPatch.timesNotVisitedArtifice = 0;
+                timesNotVisitedArtifice = 0;
             }
 
             if (ES3.KeyExists("DineScrap", currentSave))
             {
-                if (ES3.Load<int>("DineScrap", currentSave) < MoonPenaltyPatch.dineHardCap)
+                if (ES3.Load<int>("DineScrap", currentSave) < dineHardCap)
                 {
-                    MoonPenaltyPatch.timesNotVisitedDine = ES3.Load<int>("DineScrap", currentSave);
+                    timesNotVisitedDine = ES3.Load<int>("DineScrap", currentSave);
                 }
                 else
                 {
-                    ES3.Save("DineScrap", MoonPenaltyPatch.dineHardCap, currentSave);
-                    MoonPenaltyPatch.timesNotVisitedDine = MoonPenaltyPatch.dineHardCap;
+                    ES3.Save("DineScrap", dineHardCap, currentSave);
+                    timesNotVisitedDine = dineHardCap;
                 }
             }
             else
             {
                 ES3.Save("DineScrap", 0, currentSave);
-                MoonPenaltyPatch.timesNotVisitedDine = 0;
+                timesNotVisitedDine = 0;
             }
 
             if (ES3.KeyExists("RendScrap", currentSave))
             {
-                if (ES3.Load<int>("RendScrap", currentSave) < MoonPenaltyPatch.rendHardCap)
+                if (ES3.Load<int>("RendScrap", currentSave) < rendHardCap)
                 {
-                    MoonPenaltyPatch.timesNotVisitedRend = ES3.Load<int>("RendScrap", currentSave);
+                    timesNotVisitedRend = ES3.Load<int>("RendScrap", currentSave);
                 }
                 else
                 {
-                    ES3.Save("RendScrap", MoonPenaltyPatch.rendHardCap, currentSave);
-                    MoonPenaltyPatch.timesNotVisitedRend = MoonPenaltyPatch.rendHardCap;
+                    ES3.Save("RendScrap", rendHardCap, currentSave);
+                    timesNotVisitedRend = rendHardCap;
                 }
             }
             else
             {
                 ES3.Save("RendScrap", 0, currentSave);
-                MoonPenaltyPatch.timesNotVisitedRend = 0;
+                timesNotVisitedRend = 0;
             }
 
             if (ES3.KeyExists("EmbrionScrap", currentSave))
             {
-                if (ES3.Load<int>("EmbrionScrap", currentSave) < MoonPenaltyPatch.embHardCap)
+                if (ES3.Load<int>("EmbrionScrap", currentSave) < embHardCap)
                 {
-                    MoonPenaltyPatch.timesNotVisitedEmb = ES3.Load<int>("EmbrionScrap", currentSave);
+                    timesNotVisitedEmb = ES3.Load<int>("EmbrionScrap", currentSave);
                 }
                 else
                 {
-                    ES3.Save("EmbrionScrap", MoonPenaltyPatch.embHardCap, currentSave);
-                    MoonPenaltyPatch.timesNotVisitedEmb = MoonPenaltyPatch.embHardCap;
+                    ES3.Save("EmbrionScrap", embHardCap, currentSave);
+                    timesNotVisitedEmb = embHardCap;
                 }
             }
             else
             {
                 ES3.Save("EmbrionScrap", 0, currentSave);
-                MoonPenaltyPatch.timesNotVisitedEmb = 0;
+                timesNotVisitedEmb = 0;
             }
 
             if (ES3.KeyExists("AdaScrap", currentSave))
             {
-                if (ES3.Load<int>("AdaScrap", currentSave) < MoonPenaltyPatch.adaHardCap)
+                if (ES3.Load<int>("AdaScrap", currentSave) < adaHardCap)
                 {
-                    MoonPenaltyPatch.timesNotVisitedAda = ES3.Load<int>("AdaScrap", currentSave);
+                    timesNotVisitedAda = ES3.Load<int>("AdaScrap", currentSave);
                 }
                 else
                 {
-                    ES3.Save("AdaScrap", MoonPenaltyPatch.adaHardCap, currentSave);
-                    MoonPenaltyPatch.timesNotVisitedAda = MoonPenaltyPatch.adaHardCap;
+                    ES3.Save("AdaScrap", adaHardCap, currentSave);
+                    timesNotVisitedAda = adaHardCap;
                 }
             }
             else
             {
                 ES3.Save("AdaScrap", 0, currentSave);
-                MoonPenaltyPatch.timesNotVisitedAda = 0;
+                timesNotVisitedAda = 0;
             }
 
             if (ES3.KeyExists("MarchScrap", currentSave))
             {
-                if (ES3.Load<int>("MarchScrap", currentSave) < MoonPenaltyPatch.marchHardCap)
+                if (ES3.Load<int>("MarchScrap", currentSave) < marchHardCap)
                 {
-                    MoonPenaltyPatch.timesNotVisitedMarch = ES3.Load<int>("MarchScrap", currentSave);
+                    timesNotVisitedMarch = ES3.Load<int>("MarchScrap", currentSave);
                 }
                 else
                 {
-                    ES3.Save("MarchScrap", MoonPenaltyPatch.marchHardCap, currentSave);
-                    MoonPenaltyPatch.timesNotVisitedMarch = MoonPenaltyPatch.marchHardCap;
+                    ES3.Save("MarchScrap", marchHardCap, currentSave);
+                    timesNotVisitedMarch = marchHardCap;
                 }
             }
             else
             {
                 ES3.Save("MarchScrap", 0, currentSave);
-                MoonPenaltyPatch.timesNotVisitedMarch = 0;
+                timesNotVisitedMarch = 0;
             }
 
             if (ES3.KeyExists("OffScrap", currentSave))
             {
-                if (ES3.Load<int>("OffScrap", currentSave) < MoonPenaltyPatch.offHardCap)
+                if (ES3.Load<int>("OffScrap", currentSave) < offHardCap)
                 {
-                    MoonPenaltyPatch.timesNotVisitedOff = ES3.Load<int>("OffScrap", currentSave);
+                    timesNotVisitedOff = ES3.Load<int>("OffScrap", currentSave);
                 }
                 else
                 {
-                    ES3.Save("OffScrap", MoonPenaltyPatch.offHardCap, currentSave);
-                    MoonPenaltyPatch.timesNotVisitedOff = MoonPenaltyPatch.offHardCap;
+                    ES3.Save("OffScrap", offHardCap, currentSave);
+                    timesNotVisitedOff = offHardCap;
                 }
             }
             else
             {
                 ES3.Save("OffScrap", 0, currentSave);
-                MoonPenaltyPatch.timesNotVisitedOff = 0;
+                timesNotVisitedOff = 0;
             }
 
             if (ES3.KeyExists("VowScrap", currentSave))
             {
-                if (ES3.Load<int>("VowScrap", currentSave) < MoonPenaltyPatch.vowHardCap)
+                if (ES3.Load<int>("VowScrap", currentSave) < vowHardCap)
                 {
-                    MoonPenaltyPatch.timesNotVisitedVow = ES3.Load<int>("VowScrap", currentSave);
+                    timesNotVisitedVow = ES3.Load<int>("VowScrap", currentSave);
                 }
                 else
                 {
-                    ES3.Save("VowScrap", MoonPenaltyPatch.vowHardCap, currentSave);
-                    MoonPenaltyPatch.timesNotVisitedVow = MoonPenaltyPatch.vowHardCap;
+                    ES3.Save("VowScrap", vowHardCap, currentSave);
+                    timesNotVisitedVow = vowHardCap;
                 }
             }
             else
             {
                 ES3.Save("VowScrap", 0, currentSave);
-                MoonPenaltyPatch.timesNotVisitedVow = 0;
+                timesNotVisitedVow = 0;
             }
 
             if (ES3.KeyExists("AssScrap", currentSave))
             {
-                if (ES3.Load<int>("AssScrap", currentSave) < MoonPenaltyPatch.assHardCap)
+                if (ES3.Load<int>("AssScrap", currentSave) < assHardCap)
                 {
-                    MoonPenaltyPatch.timesNotVisitedAss = ES3.Load<int>("AssScrap", currentSave);
+                    timesNotVisitedAss = ES3.Load<int>("AssScrap", currentSave);
                 }
                 else
                 {
-                    ES3.Save("AssScrap", MoonPenaltyPatch.assHardCap, currentSave);
-                    MoonPenaltyPatch.timesNotVisitedAss = MoonPenaltyPatch.assHardCap;
+                    ES3.Save("AssScrap", assHardCap, currentSave);
+                    timesNotVisitedAss = assHardCap;
                 }
             }
             else
             {
                 ES3.Save("AssScrap", 0, currentSave);
-                MoonPenaltyPatch.timesNotVisitedAss = 0;
+                timesNotVisitedAss = 0;
             }
 
             if (ES3.KeyExists("AssScrap", currentSave))
             {
-                if (ES3.Load<int>("AssScrap", currentSave) < MoonPenaltyPatch.assHardCap)
+                if (ES3.Load<int>("AssScrap", currentSave) < assHardCap)
                 {
-                    MoonPenaltyPatch.timesNotVisitedAss = ES3.Load<int>("AssScrap", currentSave);
+                    timesNotVisitedAss = ES3.Load<int>("AssScrap", currentSave);
                 }
                 else
                 {
-                    ES3.Save("AssScrap", MoonPenaltyPatch.assHardCap, currentSave);
-                    MoonPenaltyPatch.timesNotVisitedAss = MoonPenaltyPatch.assHardCap;
+                    ES3.Save("AssScrap", assHardCap, currentSave);
+                    timesNotVisitedAss = assHardCap;
                 }
             }
             else
             {
                 ES3.Save("ExpScrap", 0, currentSave);
-                MoonPenaltyPatch.timesNotVisitedExp = 0;
+                timesNotVisitedExp = 0;
             }
 
             if (ES3.KeyExists("ExpScrap", currentSave))
             {
-                if (ES3.Load<int>("ExpScrap", currentSave) < MoonPenaltyPatch.expHardCap)
+                if (ES3.Load<int>("ExpScrap", currentSave) < expHardCap)
                 {
-                    MoonPenaltyPatch.timesNotVisitedExp = ES3.Load<int>("ExpScrap", currentSave);
+                    timesNotVisitedExp = ES3.Load<int>("ExpScrap", currentSave);
                 }
                 else
                 {
-                    ES3.Save("ExpScrap", MoonPenaltyPatch.expHardCap, currentSave);
-                    MoonPenaltyPatch.timesNotVisitedExp = MoonPenaltyPatch.expHardCap;
+                    ES3.Save("ExpScrap", expHardCap, currentSave);
+                    timesNotVisitedExp = expHardCap;
                 }
             }
             else
             {
                 ES3.Save("ExpScrap", 0, currentSave);
-                MoonPenaltyPatch.timesNotVisitedExp = 0;
+                timesNotVisitedExp = 0;
+            }
+
+            if (ES3.KeyExists("rebirths", currentSave))
+            {
+
+                MoonPricePatch.rebirthAmount = ES3.Load<int>("rebirths", currentSave);
+            }
+            else
+            {
+                ES3.Save("rebirths", 0, currentSave);
+                MoonPricePatch.rebirthAmount = 0;
+            }
+
+            if (ES3.KeyExists("rebirthCost", currentSave))
+            {
+
+                MoonPricePatch.rebirthCost = ES3.Load<int>("rebirthCost", currentSave);
+            }
+            else
+            {
+                ES3.Save("rebirthCost", 8000, currentSave);
+                MoonPricePatch.rebirthCost = 8000;
+            }
+
+            if (ES3.KeyExists("shouldRebirth", currentSave))
+            {
+
+                TimeOfDayPatch.shouldRebirth = ES3.Load<bool>("shouldRebirth", currentSave);
+            }
+            else
+            {
+                ES3.Save("shouldRebirth", false, currentSave);
+                TimeOfDayPatch.shouldRebirth = false;
             }
         }
 

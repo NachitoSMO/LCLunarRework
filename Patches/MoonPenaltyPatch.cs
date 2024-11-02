@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using UnityEngine;
 
 namespace Nachito.LunarRework.Patches
 {
@@ -43,16 +44,16 @@ namespace Nachito.LunarRework.Patches
         public static int titanHardCap = 12;
         public static int titanBasePrice = 550;
         public static int artScrapMultiplier = 1;
-        public static int artHardCap = 3;
+        public static int artHardCap = 3; 
         public static int artBasePrice = 800;
         public static int dineScrapMultiplier = 2;
-        public static int dineHardCap = 18;
+        public static int dineHardCap = 18; 
         public static int dineBasePrice = 450;
         public static int rendScrapMultiplier = 2;
-        public static int rendHardCap = 10;
+        public static int rendHardCap = 10; 
         public static int rendBasePrice = 400;
         public static int embScrapMultiplier = 3;
-        public static int embHardCap = 30;
+        public static int embHardCap = 30; 
         public static int embBasePrice = 100;
         public static int adaScrapMultiplier = 3;
         public static int adaHardCap = 18;
@@ -65,7 +66,7 @@ namespace Nachito.LunarRework.Patches
         public static int assScrapMultiplier = 1;
         public static int assHardCap = 15;
         public static int expScrapMultiplier = 1;
-        public static int expHardCap = 20;
+        public static int expHardCap = 20; 
 
         [HarmonyPatch("SetShipReadyToLand")]
         [HarmonyPostfix]
@@ -179,11 +180,12 @@ namespace Nachito.LunarRework.Patches
 
             if (__instance.currentLevel.levelID != 3)
             {
+                var terminal = Object.FindObjectOfType<Terminal>();
                 __instance.ChangeLevel(3);
-                __instance.ChangeLevelServerRpc(3, MoonPricePatch.terminal.groupCredits);
+                __instance.ChangeLevelServerRpc(3, terminal.groupCredits);
             }
 
-            ServerStuff.SyncVarsClientRpc(timesNotVisitedExp, timesNotVisitedAss, timesNotVisitedVow, timesNotVisitedOff, timesNotVisitedMarch, timesNotVisitedAda, timesNotVisitedRend, timesNotVisitedDine, timesNotVisitedTitan, timesNotVisitedEmb, timesNotVisitedArtifice);
+            ServerStuff.SyncVarsServerRpc(timesNotVisitedExp, timesNotVisitedAss, timesNotVisitedVow, timesNotVisitedOff, timesNotVisitedMarch, timesNotVisitedAda, timesNotVisitedRend, timesNotVisitedDine, timesNotVisitedTitan, timesNotVisitedEmb, timesNotVisitedArtifice, MoonPricePatch.rebirthAmount, MoonPricePatch.rebirthCost, TimeOfDayPatch.shouldRebirth);
 
 
         }
@@ -278,7 +280,7 @@ namespace Nachito.LunarRework.Patches
         static void SyncVars(StartOfRound __instance)
         {
             if (__instance.IsHost)
-                ServerStuff.SyncVarsClientRpc(timesNotVisitedExp, timesNotVisitedAss, timesNotVisitedVow, timesNotVisitedOff, timesNotVisitedMarch, timesNotVisitedAda, timesNotVisitedRend, timesNotVisitedDine, timesNotVisitedTitan, timesNotVisitedEmb, timesNotVisitedArtifice);
+                ServerStuff.SyncVarsServerRpc(timesNotVisitedExp, timesNotVisitedAss, timesNotVisitedVow, timesNotVisitedOff, timesNotVisitedMarch, timesNotVisitedAda, timesNotVisitedRend, timesNotVisitedDine, timesNotVisitedTitan, timesNotVisitedEmb, timesNotVisitedArtifice, MoonPricePatch.rebirthAmount, MoonPricePatch.rebirthCost, TimeOfDayPatch.shouldRebirth);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using UnityEngine;
 
 namespace Nachito.LunarRework.Patches
 {
@@ -9,7 +10,8 @@ namespace Nachito.LunarRework.Patches
         [HarmonyPostfix]
         static void CreditsPatch(ref int newGroupCredits)
         {
-            MoonPricePatch.terminal.groupCredits = (int)(newGroupCredits / StartOfRound.Instance.companyBuyingRate);
+            var terminal = Object.FindObjectOfType<Terminal>();
+            terminal.groupCredits = (int)(newGroupCredits / StartOfRound.Instance.companyBuyingRate);
         }
 
     }
