@@ -9,14 +9,21 @@ This mod aims to make visiting different planets during gameplay more rewarding 
 - Depending on the moon, the amount of scrap in each moon will increase from 1 to 3 per **day not visiting said moon**.
 - This effect *stacks* until you reach a **hard cap**, which varies depending on the moon.
 
+## Rebirth
+
+- For an initial 8000 credits, you may purchase a Rebirth by typing 'rebirth' into the Terminal.
+- Once purchased, your Profit Quota will **loop back to 130** next quota fulfill.
+- The Scrap Gain and cap of each moon will also be **doubled**.
+- The cost of Rebirth will increase by 5000 credits after each purchase.
+
 ## Major Changes
 
 - After visiting a moon, the ship will automatically reroute to the Company. This means **you must pay again in order to re-visit high-tier moons**.
 - Moon prices have been slightly altered.
+- Artifice's scrap amount has been reverted to that of v56. This results in a major buff.
 
 ## Misc changes
 
-- Artifice's scrap amount has been reverted to that of v56. This results in a major buff.
 - Selling early will now return the full value of the items in credits. However, the amount of quota fulfilled stays the same.
 
 ## Notes
