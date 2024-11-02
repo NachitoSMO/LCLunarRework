@@ -24,7 +24,8 @@ namespace Nachito.LunarRework.Patches
                     __instance.SyncNewProfitQuotaClientRpc(130, overtimeBonus, __instance.timesFulfilledQuota);
                     RoundManagerPatch.ChangeScrapAmounts();
                     RoundManagerPatch.SaveEverything(StartOfRound.Instance.localPlayerController);
-                    ServerStuff.SyncVarsServerRpc(timesNotVisitedExp, timesNotVisitedAss, timesNotVisitedVow, timesNotVisitedOff, timesNotVisitedMarch, timesNotVisitedAda, timesNotVisitedRend, timesNotVisitedDine, timesNotVisitedTitan, timesNotVisitedEmb, timesNotVisitedArtifice, MoonPricePatch.rebirthAmount, rebirthMoney, shouldRebirth);
+                    ServerStuff.SyncVarsServerRpc(timesNotVisitedExp, timesNotVisitedAss, timesNotVisitedVow, timesNotVisitedOff, timesNotVisitedMarch, timesNotVisitedAda, timesNotVisitedRend, timesNotVisitedDine, timesNotVisitedTitan, timesNotVisitedEmb, timesNotVisitedArtifice, MoonPricePatch.rebirthAmount, rebirthMoney, shouldRebirth,
+                        titPrice, embPrice, artPrice, rendPrice, dinePrice);
                 }
             }
         }

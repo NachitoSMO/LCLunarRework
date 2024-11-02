@@ -176,7 +176,8 @@ namespace Nachito.LunarRework.Patches
                 __instance.ChangeLevelServerRpc(3, terminal.groupCredits);
             }
 
-            ServerStuff.SyncVarsServerRpc(timesNotVisitedExp, timesNotVisitedAss, timesNotVisitedVow, timesNotVisitedOff, timesNotVisitedMarch, timesNotVisitedAda, timesNotVisitedRend, timesNotVisitedDine, timesNotVisitedTitan, timesNotVisitedEmb, timesNotVisitedArtifice, MoonPricePatch.rebirthAmount, rebirthMoney, TimeOfDayPatch.shouldRebirth);
+            ServerStuff.SyncVarsServerRpc(timesNotVisitedExp, timesNotVisitedAss, timesNotVisitedVow, timesNotVisitedOff, timesNotVisitedMarch, timesNotVisitedAda, timesNotVisitedRend, timesNotVisitedDine, timesNotVisitedTitan, timesNotVisitedEmb, timesNotVisitedArtifice, MoonPricePatch.rebirthAmount, rebirthMoney, TimeOfDayPatch.shouldRebirth,
+                titPrice, embPrice, artPrice, rendPrice, dinePrice);
 
 
         }
@@ -293,7 +294,8 @@ namespace Nachito.LunarRework.Patches
         static void SyncVars(StartOfRound __instance)
         {
             if (__instance.IsHost)
-                ServerStuff.SyncVarsServerRpc(timesNotVisitedExp, timesNotVisitedAss, timesNotVisitedVow, timesNotVisitedOff, timesNotVisitedMarch, timesNotVisitedAda, timesNotVisitedRend, timesNotVisitedDine, timesNotVisitedTitan, timesNotVisitedEmb, timesNotVisitedArtifice, MoonPricePatch.rebirthAmount, rebirthMoney, TimeOfDayPatch.shouldRebirth);
+                ServerStuff.SyncVarsServerRpc(timesNotVisitedExp, timesNotVisitedAss, timesNotVisitedVow, timesNotVisitedOff, timesNotVisitedMarch, timesNotVisitedAda, timesNotVisitedRend, timesNotVisitedDine, timesNotVisitedTitan, timesNotVisitedEmb, timesNotVisitedArtifice, MoonPricePatch.rebirthAmount, rebirthMoney, TimeOfDayPatch.shouldRebirth,
+                    titPrice, embPrice, artPrice, rendPrice, dinePrice);
         }
     }
 }

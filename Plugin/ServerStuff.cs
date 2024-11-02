@@ -24,11 +24,17 @@ namespace Nachito.LunarRework
         public static int cost;
         public static bool should;
         public static int credits;
+        public static int titanmon;
+        public static int embmon;
+        public static int artmon;
+        public static int rendmon;
+        public static int dinemon;
 
         #region Static Rpcs
 
         [ServerRpc]
-        public static void SyncVarsServerRpc(int timesNotVisitedExp, int timesNotVisitedAss, int timesNotVisitedVow, int timesNotVisitedOff, int timesNotVisitedMarch, int timesNotVisitedAda, int timesNotVisitedRend, int timesNotVisitedDine, int timesNotVisitedTitan, int timesNotVisitedEmb, int timesNotVisitedArtifice, int timesReborn, int rebCost, bool shouldRebirth)
+        public static void SyncVarsServerRpc(int timesNotVisitedExp, int timesNotVisitedAss, int timesNotVisitedVow, int timesNotVisitedOff, int timesNotVisitedMarch, int timesNotVisitedAda, int timesNotVisitedRend, int timesNotVisitedDine, int timesNotVisitedTitan, int timesNotVisitedEmb, int timesNotVisitedArtifice, int timesReborn, int rebCost, bool shouldRebirth,
+            int titanmoney, int embmoney, int artmoney, int rendmoney, int dinemoney)
         {
             exp = timesNotVisitedExp;
             ass = timesNotVisitedAss;
@@ -44,8 +50,14 @@ namespace Nachito.LunarRework
             reb = timesReborn;
             cost = rebCost;
             should = shouldRebirth;
+            dinemon = dinemoney;
+            rendmon = rendmoney;
+            artmon = artmoney;
+            embmon = embmoney;
+            titanmon = titanmoney;
+
             SyncVars();
-            SyncVarsClientRpc(exp, ass, vow, off, mar, ada, rend, dine, tit, emb, art, reb, cost, should);
+            SyncVarsClientRpc(exp, ass, vow, off, mar, ada, rend, dine, tit, emb, art, reb, cost, should, titanmon, embmon, artmon, rendmon, dinemon);
         }
 
         [ServerRpc]
@@ -64,7 +76,8 @@ namespace Nachito.LunarRework
         }
 
         [ClientRpc]
-        public static void SyncVarsClientRpc(int timesNotVisitedExp, int timesNotVisitedAss, int timesNotVisitedVow, int timesNotVisitedOff, int timesNotVisitedMarch, int timesNotVisitedAda, int timesNotVisitedRend, int timesNotVisitedDine, int timesNotVisitedTitan, int timesNotVisitedEmb, int timesNotVisitedArtifice, int timesReborn, int rebCost, bool shouldRebirth)
+        public static void SyncVarsClientRpc(int timesNotVisitedExp, int timesNotVisitedAss, int timesNotVisitedVow, int timesNotVisitedOff, int timesNotVisitedMarch, int timesNotVisitedAda, int timesNotVisitedRend, int timesNotVisitedDine, int timesNotVisitedTitan, int timesNotVisitedEmb, int timesNotVisitedArtifice, int timesReborn, int rebCost, bool shouldRebirth,
+            int titanmoney, int embmoney, int artmoney, int rendmoney, int dinemoney)
         {
             exp = timesNotVisitedExp;
             ass = timesNotVisitedAss;
@@ -80,6 +93,11 @@ namespace Nachito.LunarRework
             reb = timesReborn;
             cost = rebCost;
             should = shouldRebirth;
+            titanmon = titanmoney;
+            artmon = artmoney;
+            rendmon = rendmoney;
+            embmon = embmoney;
+            dinemon = dinemoney;
             SyncVars();
         }
 
@@ -101,6 +119,11 @@ namespace Nachito.LunarRework
             MoonPricePatch.rebirthAmount = reb;
             rebirthMoney = cost;
             TimeOfDayPatch.shouldRebirth = should;
+            artPrice = artmon;
+            embPrice = embmon;
+            titPrice = titanmon;
+            rendPrice = rendmon;
+            dinePrice = dinemon;
         }
 
         private static void SyncCredits()

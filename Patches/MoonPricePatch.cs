@@ -53,7 +53,8 @@ namespace Nachito.LunarRework.Patches
                         rebirthAmount += 1;
                         rebirthMoney += 5000;
                         TimeOfDayPatch.shouldRebirth = true;
-                        ServerStuff.SyncVarsServerRpc(timesNotVisitedExp, timesNotVisitedAss, timesNotVisitedVow, timesNotVisitedOff, timesNotVisitedMarch, timesNotVisitedAda, timesNotVisitedRend, timesNotVisitedDine, timesNotVisitedTitan, timesNotVisitedEmb, timesNotVisitedArtifice, rebirthAmount, rebirthMoney, TimeOfDayPatch.shouldRebirth);
+                        ServerStuff.SyncVarsServerRpc(timesNotVisitedExp, timesNotVisitedAss, timesNotVisitedVow, timesNotVisitedOff, timesNotVisitedMarch, timesNotVisitedAda, timesNotVisitedRend, timesNotVisitedDine, timesNotVisitedTitan, timesNotVisitedEmb, timesNotVisitedArtifice, rebirthAmount, rebirthMoney, TimeOfDayPatch.shouldRebirth,
+                            titPrice, embPrice, artPrice, rendPrice, dinePrice);
                     }
                         
                     DeleteKeyword("yes");
