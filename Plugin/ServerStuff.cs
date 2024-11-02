@@ -2,6 +2,7 @@
 using StaticNetcodeLib;
 using Unity.Netcode;
 using UnityEngine;
+using static Nachito.LunarRework.Nachito_LunarRework;
 
 namespace Nachito.LunarRework
 {
@@ -98,7 +99,7 @@ namespace Nachito.LunarRework
             MoonPenaltyPatch.timesNotVisitedEmb = emb;
             MoonPenaltyPatch.timesNotVisitedArtifice = art;
             MoonPricePatch.rebirthAmount = reb;
-            MoonPricePatch.rebirthCost = cost;
+            rebirthMoney = cost;
             TimeOfDayPatch.shouldRebirth = should;
         }
 

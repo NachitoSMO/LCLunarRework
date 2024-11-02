@@ -28,7 +28,9 @@ This mod aims to make visiting different planets during gameplay more rewarding 
 
 ## Notes
 
-This mod depends on the StaticNetcodeLib patcher.
+This mod depends on the StaticNetcodeLib patcher and TerminalAPI.
+
+As of 0.0.3, many of this mods' values can be configured. (Note that in the case of the cost of Rebirth, they won't apply until you create a new save file.)
 
 This mod will likely break with:
 - Mods that tamper with scrap amounts in base moons.

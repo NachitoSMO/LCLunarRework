@@ -1,6 +1,7 @@
 ﻿using GameNetcodeStuff;
 using HarmonyLib;
 using static Nachito.LunarRework.Patches.MoonPenaltyPatch;
+using static Nachito.LunarRework.Nachito_LunarRework;
 
 namespace Nachito.LunarRework.Patches
 {
@@ -19,29 +20,29 @@ namespace Nachito.LunarRework.Patches
 
         public static void ChangeScrapAmounts()
         {
-            titanHardCap = titanHardCap * (MoonPricePatch.rebirthAmount + 1);
-            dineHardCap = dineHardCap * (MoonPricePatch.rebirthAmount + 1);
-            rendHardCap = rendHardCap * (MoonPricePatch.rebirthAmount + 1);
-            adaHardCap = adaHardCap * (MoonPricePatch.rebirthAmount + 1);
-            marchHardCap = marchHardCap * (MoonPricePatch.rebirthAmount + 1);
-            offHardCap = offHardCap * (MoonPricePatch.rebirthAmount + 1);
-            vowHardCap = vowHardCap * (MoonPricePatch.rebirthAmount + 1);
-            assHardCap = assHardCap * (MoonPricePatch.rebirthAmount + 1);
-            expHardCap = expHardCap * (MoonPricePatch.rebirthAmount + 1);
-            embHardCap = embHardCap * (MoonPricePatch.rebirthAmount + 1);
-            artHardCap = artHardCap * (MoonPricePatch.rebirthAmount + 1);
+            titanCap = titanCap * (MoonPricePatch.rebirthAmount + 1);
+            dineCap = dineCap * (MoonPricePatch.rebirthAmount + 1);
+            rendCap = rendCap * (MoonPricePatch.rebirthAmount + 1);
+            adaCap = adaCap * (MoonPricePatch.rebirthAmount + 1);
+            marchCap = marchCap * (MoonPricePatch.rebirthAmount + 1);
+            offCap = offCap * (MoonPricePatch.rebirthAmount + 1);
+            vowCap = vowCap * (MoonPricePatch.rebirthAmount + 1);
+            assCap = assCap * (MoonPricePatch.rebirthAmount + 1);
+            expCap = expCap * (MoonPricePatch.rebirthAmount + 1);
+            embCap = embCap * (MoonPricePatch.rebirthAmount + 1);
+            artCap = artCap * (MoonPricePatch.rebirthAmount + 1);
 
-            titanScrapMultiplier = titanScrapMultiplier * (MoonPricePatch.rebirthAmount + 1);
-            dineScrapMultiplier = dineScrapMultiplier * (MoonPricePatch.rebirthAmount + 1);
-            rendScrapMultiplier = rendScrapMultiplier * (MoonPricePatch.rebirthAmount + 1);
-            adaScrapMultiplier = adaScrapMultiplier * (MoonPricePatch.rebirthAmount + 1);
-            marchScrapMultiplier = marchScrapMultiplier * (MoonPricePatch.rebirthAmount + 1);
-            offScrapMultiplier = offScrapMultiplier * (MoonPricePatch.rebirthAmount + 1);
-            vowScrapMultiplier = vowScrapMultiplier * (MoonPricePatch.rebirthAmount + 1);
-            assScrapMultiplier = assScrapMultiplier * (MoonPricePatch.rebirthAmount + 1);
-            expScrapMultiplier = expScrapMultiplier * (MoonPricePatch.rebirthAmount + 1);
-            embScrapMultiplier = embScrapMultiplier * (MoonPricePatch.rebirthAmount + 1);
-            artScrapMultiplier = artScrapMultiplier * (MoonPricePatch.rebirthAmount + 1);
+            titanMult = titanMult * (MoonPricePatch.rebirthAmount + 1);
+            dineMult = dineMult * (MoonPricePatch.rebirthAmount + 1);
+            rendMult = rendMult * (MoonPricePatch.rebirthAmount + 1);
+            adaMult = adaMult * (MoonPricePatch.rebirthAmount + 1);
+            marchMult = marchMult * (MoonPricePatch.rebirthAmount + 1);
+            offMult = offMult * (MoonPricePatch.rebirthAmount + 1);
+            vowMult = vowMult * (MoonPricePatch.rebirthAmount + 1);
+            assMult = assMult * (MoonPricePatch.rebirthAmount + 1);
+            expMult = expMult * (MoonPricePatch.rebirthAmount + 1);
+            embMult = embMult * (MoonPricePatch.rebirthAmount + 1);
+            artMult = artMult * (MoonPricePatch.rebirthAmount + 1);
         }
 
         public static void SaveEverything(PlayerControllerB __instance)
@@ -55,14 +56,14 @@ namespace Nachito.LunarRework.Patches
 
             if (ES3.KeyExists("TitanScrap", currentSave))
             {
-                if (ES3.Load<int>("TitanScrap", currentSave) < titanHardCap)
+                if (ES3.Load<int>("TitanScrap", currentSave) < titanCap)
                 {
                     timesNotVisitedTitan = ES3.Load<int>("TitanScrap", currentSave);
                 }
                 else
                 {
-                    ES3.Save("TitanScrap", titanHardCap, currentSave);
-                    timesNotVisitedTitan = titanHardCap;
+                    ES3.Save("TitanScrap", titanCap, currentSave);
+                    timesNotVisitedTitan = titanCap;
                 }
             }
             else
@@ -73,14 +74,14 @@ namespace Nachito.LunarRework.Patches
 
             if (ES3.KeyExists("ArtScrap", currentSave))
             {
-                if (ES3.Load<int>("ArtScrap", currentSave) < artHardCap)
+                if (ES3.Load<int>("ArtScrap", currentSave) < artCap)
                 {
                     timesNotVisitedArtifice = ES3.Load<int>("ArtScrap", currentSave);
                 }
                 else
                 {
-                    ES3.Save("ArtScrap", artHardCap, currentSave);
-                    timesNotVisitedArtifice = artHardCap;
+                    ES3.Save("ArtScrap", artCap, currentSave);
+                    timesNotVisitedArtifice = artCap;
                 }
             }
             else
@@ -91,14 +92,14 @@ namespace Nachito.LunarRework.Patches
 
             if (ES3.KeyExists("DineScrap", currentSave))
             {
-                if (ES3.Load<int>("DineScrap", currentSave) < dineHardCap)
+                if (ES3.Load<int>("DineScrap", currentSave) < dineCap)
                 {
                     timesNotVisitedDine = ES3.Load<int>("DineScrap", currentSave);
                 }
                 else
                 {
-                    ES3.Save("DineScrap", dineHardCap, currentSave);
-                    timesNotVisitedDine = dineHardCap;
+                    ES3.Save("DineScrap", dineCap, currentSave);
+                    timesNotVisitedDine = dineCap;
                 }
             }
             else
@@ -109,14 +110,14 @@ namespace Nachito.LunarRework.Patches
 
             if (ES3.KeyExists("RendScrap", currentSave))
             {
-                if (ES3.Load<int>("RendScrap", currentSave) < rendHardCap)
+                if (ES3.Load<int>("RendScrap", currentSave) < rendCap)
                 {
                     timesNotVisitedRend = ES3.Load<int>("RendScrap", currentSave);
                 }
                 else
                 {
-                    ES3.Save("RendScrap", rendHardCap, currentSave);
-                    timesNotVisitedRend = rendHardCap;
+                    ES3.Save("RendScrap", rendCap, currentSave);
+                    timesNotVisitedRend = rendCap;
                 }
             }
             else
@@ -127,14 +128,14 @@ namespace Nachito.LunarRework.Patches
 
             if (ES3.KeyExists("EmbrionScrap", currentSave))
             {
-                if (ES3.Load<int>("EmbrionScrap", currentSave) < embHardCap)
+                if (ES3.Load<int>("EmbrionScrap", currentSave) < embCap)
                 {
                     timesNotVisitedEmb = ES3.Load<int>("EmbrionScrap", currentSave);
                 }
                 else
                 {
-                    ES3.Save("EmbrionScrap", embHardCap, currentSave);
-                    timesNotVisitedEmb = embHardCap;
+                    ES3.Save("EmbrionScrap", embCap, currentSave);
+                    timesNotVisitedEmb = embCap;
                 }
             }
             else
@@ -145,14 +146,14 @@ namespace Nachito.LunarRework.Patches
 
             if (ES3.KeyExists("AdaScrap", currentSave))
             {
-                if (ES3.Load<int>("AdaScrap", currentSave) < adaHardCap)
+                if (ES3.Load<int>("AdaScrap", currentSave) < adaCap)
                 {
                     timesNotVisitedAda = ES3.Load<int>("AdaScrap", currentSave);
                 }
                 else
                 {
-                    ES3.Save("AdaScrap", adaHardCap, currentSave);
-                    timesNotVisitedAda = adaHardCap;
+                    ES3.Save("AdaScrap", adaCap, currentSave);
+                    timesNotVisitedAda = adaCap;
                 }
             }
             else
@@ -163,14 +164,14 @@ namespace Nachito.LunarRework.Patches
 
             if (ES3.KeyExists("MarchScrap", currentSave))
             {
-                if (ES3.Load<int>("MarchScrap", currentSave) < marchHardCap)
+                if (ES3.Load<int>("MarchScrap", currentSave) < marchCap)
                 {
                     timesNotVisitedMarch = ES3.Load<int>("MarchScrap", currentSave);
                 }
                 else
                 {
-                    ES3.Save("MarchScrap", marchHardCap, currentSave);
-                    timesNotVisitedMarch = marchHardCap;
+                    ES3.Save("MarchScrap", marchCap, currentSave);
+                    timesNotVisitedMarch = marchCap;
                 }
             }
             else
@@ -181,14 +182,14 @@ namespace Nachito.LunarRework.Patches
 
             if (ES3.KeyExists("OffScrap", currentSave))
             {
-                if (ES3.Load<int>("OffScrap", currentSave) < offHardCap)
+                if (ES3.Load<int>("OffScrap", currentSave) < offCap)
                 {
                     timesNotVisitedOff = ES3.Load<int>("OffScrap", currentSave);
                 }
                 else
                 {
-                    ES3.Save("OffScrap", offHardCap, currentSave);
-                    timesNotVisitedOff = offHardCap;
+                    ES3.Save("OffScrap", offCap, currentSave);
+                    timesNotVisitedOff = offCap;
                 }
             }
             else
@@ -199,14 +200,14 @@ namespace Nachito.LunarRework.Patches
 
             if (ES3.KeyExists("VowScrap", currentSave))
             {
-                if (ES3.Load<int>("VowScrap", currentSave) < vowHardCap)
+                if (ES3.Load<int>("VowScrap", currentSave) < vowCap)
                 {
                     timesNotVisitedVow = ES3.Load<int>("VowScrap", currentSave);
                 }
                 else
                 {
-                    ES3.Save("VowScrap", vowHardCap, currentSave);
-                    timesNotVisitedVow = vowHardCap;
+                    ES3.Save("VowScrap", vowCap, currentSave);
+                    timesNotVisitedVow = vowCap;
                 }
             }
             else
@@ -217,14 +218,14 @@ namespace Nachito.LunarRework.Patches
 
             if (ES3.KeyExists("AssScrap", currentSave))
             {
-                if (ES3.Load<int>("AssScrap", currentSave) < assHardCap)
+                if (ES3.Load<int>("AssScrap", currentSave) < assCap)
                 {
                     timesNotVisitedAss = ES3.Load<int>("AssScrap", currentSave);
                 }
                 else
                 {
-                    ES3.Save("AssScrap", assHardCap, currentSave);
-                    timesNotVisitedAss = assHardCap;
+                    ES3.Save("AssScrap", assCap, currentSave);
+                    timesNotVisitedAss = assCap;
                 }
             }
             else
@@ -235,14 +236,14 @@ namespace Nachito.LunarRework.Patches
 
             if (ES3.KeyExists("AssScrap", currentSave))
             {
-                if (ES3.Load<int>("AssScrap", currentSave) < assHardCap)
+                if (ES3.Load<int>("AssScrap", currentSave) < assCap)
                 {
                     timesNotVisitedAss = ES3.Load<int>("AssScrap", currentSave);
                 }
                 else
                 {
-                    ES3.Save("AssScrap", assHardCap, currentSave);
-                    timesNotVisitedAss = assHardCap;
+                    ES3.Save("AssScrap", assCap, currentSave);
+                    timesNotVisitedAss = assCap;
                 }
             }
             else
@@ -253,14 +254,14 @@ namespace Nachito.LunarRework.Patches
 
             if (ES3.KeyExists("ExpScrap", currentSave))
             {
-                if (ES3.Load<int>("ExpScrap", currentSave) < expHardCap)
+                if (ES3.Load<int>("ExpScrap", currentSave) < expCap)
                 {
                     timesNotVisitedExp = ES3.Load<int>("ExpScrap", currentSave);
                 }
                 else
                 {
-                    ES3.Save("ExpScrap", expHardCap, currentSave);
-                    timesNotVisitedExp = expHardCap;
+                    ES3.Save("ExpScrap", expCap, currentSave);
+                    timesNotVisitedExp = expCap;
                 }
             }
             else
@@ -283,12 +284,11 @@ namespace Nachito.LunarRework.Patches
             if (ES3.KeyExists("rebirthCost", currentSave))
             {
 
-                MoonPricePatch.rebirthCost = ES3.Load<int>("rebirthCost", currentSave);
+                rebirthMoney = ES3.Load<int>("rebirthCost", currentSave);
             }
             else
             {
-                ES3.Save("rebirthCost", 8000, currentSave);
-                MoonPricePatch.rebirthCost = 8000;
+                ES3.Save("rebirthCost", rebirthMoney, currentSave);
             }
 
             if (ES3.KeyExists("shouldRebirth", currentSave))

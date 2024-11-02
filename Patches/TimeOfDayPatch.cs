@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using static Nachito.LunarRework.Patches.MoonPenaltyPatch;
+using static Nachito.LunarRework.Nachito_LunarRework;
 
 namespace Nachito.LunarRework.Patches
 {
@@ -16,14 +17,14 @@ namespace Nachito.LunarRework.Patches
                 {
                     shouldRebirth = false;
                     ES3.Save("rebirths", MoonPricePatch.rebirthAmount, RoundManagerPatch.currentSave);
-                    ES3.Save("rebirthCost", MoonPricePatch.rebirthCost, RoundManagerPatch.currentSave);
+                    ES3.Save("rebirthCost", rebirthMoney, RoundManagerPatch.currentSave);
                     ES3.Save("shouldRebirth", shouldRebirth, RoundManagerPatch.currentSave);
                     int num = __instance.quotaFulfilled - __instance.profitQuota;
                     int overtimeBonus = num / 5 + 15 * __instance.daysUntilDeadline;
                     __instance.SyncNewProfitQuotaClientRpc(130, overtimeBonus, __instance.timesFulfilledQuota);
                     RoundManagerPatch.ChangeScrapAmounts();
                     RoundManagerPatch.SaveEverything(StartOfRound.Instance.localPlayerController);
-                    ServerStuff.SyncVarsServerRpc(timesNotVisitedExp, timesNotVisitedAss, timesNotVisitedVow, timesNotVisitedOff, timesNotVisitedMarch, timesNotVisitedAda, timesNotVisitedRend, timesNotVisitedDine, timesNotVisitedTitan, timesNotVisitedEmb, timesNotVisitedArtifice, MoonPricePatch.rebirthAmount, MoonPricePatch.rebirthCost, shouldRebirth);
+                    ServerStuff.SyncVarsServerRpc(timesNotVisitedExp, timesNotVisitedAss, timesNotVisitedVow, timesNotVisitedOff, timesNotVisitedMarch, timesNotVisitedAda, timesNotVisitedRend, timesNotVisitedDine, timesNotVisitedTitan, timesNotVisitedEmb, timesNotVisitedArtifice, MoonPricePatch.rebirthAmount, rebirthMoney, shouldRebirth);
                 }
             }
         }

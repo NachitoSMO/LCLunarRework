@@ -1,7 +1,9 @@
 using HarmonyLib;
 using static TerminalApi.TerminalApi;
 using static Nachito.LunarRework.Patches.MoonPenaltyPatch;
+using static Nachito.LunarRework.Nachito_LunarRework;
 using UnityEngine;
+using BepInEx.Configuration;
 
 namespace Nachito.LunarRework.Patches
 {
@@ -12,7 +14,7 @@ namespace Nachito.LunarRework.Patches
         public static string og = string.Empty;
         public static string og2 = string.Empty;
         public static string og3 = string.Empty;
-        public static int rebirthCost = 8000;
+        public static ConfigEntry<int>? rebirthCost;
         public static bool stop = false;
         public static bool stop2 = false;
         public static bool stop3 = false;
@@ -44,14 +46,14 @@ namespace Nachito.LunarRework.Patches
 
                 if (node == rebirthNodeConfirm)
                 {
-                    if (terminal.groupCredits >= rebirthCost)
+                    if (terminal.groupCredits >= rebirthMoney)
                     {
-                        int newGroupCredits = terminal.groupCredits - rebirthCost;
+                        int newGroupCredits = terminal.groupCredits - rebirthMoney;
                         ServerStuff.SyncCreditsAfterRebirthServerRpc(newGroupCredits);
                         rebirthAmount += 1;
-                        rebirthCost += 5000;
+                        rebirthMoney += 5000;
                         TimeOfDayPatch.shouldRebirth = true;
-                        ServerStuff.SyncVarsServerRpc(timesNotVisitedExp, timesNotVisitedAss, timesNotVisitedVow, timesNotVisitedOff, timesNotVisitedMarch, timesNotVisitedAda, timesNotVisitedRend, timesNotVisitedDine, timesNotVisitedTitan, timesNotVisitedEmb, timesNotVisitedArtifice, rebirthAmount, rebirthCost, TimeOfDayPatch.shouldRebirth);
+                        ServerStuff.SyncVarsServerRpc(timesNotVisitedExp, timesNotVisitedAss, timesNotVisitedVow, timesNotVisitedOff, timesNotVisitedMarch, timesNotVisitedAda, timesNotVisitedRend, timesNotVisitedDine, timesNotVisitedTitan, timesNotVisitedEmb, timesNotVisitedArtifice, rebirthAmount, rebirthMoney, TimeOfDayPatch.shouldRebirth);
                     }
                         
                     DeleteKeyword("yes");
@@ -76,7 +78,7 @@ namespace Nachito.LunarRework.Patches
                 stop2 = false;
             }
 
-            if (node == rebirthNodeConfirm && terminal.groupCredits < rebirthCost)
+            if (node == rebirthNodeConfirm && terminal.groupCredits < rebirthMoney)
             {
                 if (!stop3)
                 {
@@ -92,7 +94,7 @@ namespace Nachito.LunarRework.Patches
                 og2 = node.displayText;
                 var tk = CreateTerminalKeyword("yes", false, rebirthNodeConfirm);
                 AddTerminalKeyword(tk);
-                string replacement = rebirthCost + ")\n\n";
+                string replacement = rebirthMoney + ")\n\n";
                 node.displayText = node.displayText.Replace("Cost: ", "Cost: " + replacement);
                 stop2 = true;
             }
@@ -101,27 +103,27 @@ namespace Nachito.LunarRework.Patches
             {
                 case "8route":
                     Traverse titCostRef = Traverse.Create(terminal).Field("totalCostOfItems");
-                    titCostRef.SetValue(MoonPenaltyPatch.titanBasePrice);
+                    titCostRef.SetValue(titPrice);
                     break;
 
                 case "68route":
                     Traverse artCostRef = Traverse.Create(terminal).Field("totalCostOfItems");
-                    artCostRef.SetValue(MoonPenaltyPatch.artBasePrice);
+                    artCostRef.SetValue(artPrice);
                     break;
 
                 case "7route":
                     Traverse dineCostRef = Traverse.Create(terminal).Field("totalCostOfItems");
-                    dineCostRef.SetValue(MoonPenaltyPatch.dineBasePrice);
+                    dineCostRef.SetValue(dinePrice);
                     break;
 
                 case "85route":
                     Traverse rendCostRef = Traverse.Create(terminal).Field("totalCostOfItems");
-                    rendCostRef.SetValue(MoonPenaltyPatch.rendBasePrice);
+                    rendCostRef.SetValue(rendPrice);
                     break;
 
                 case "5route":
                     Traverse embCostRef = Traverse.Create(terminal).Field("totalCostOfItems");
-                    embCostRef.SetValue(MoonPenaltyPatch.embBasePrice);
+                    embCostRef.SetValue(embPrice);
                     break;
 
             }
@@ -135,57 +137,57 @@ namespace Nachito.LunarRework.Patches
             if (node.name.Equals("MoonsCatalogue"))
             {
                 og = node.displayText;
-                if (MoonPenaltyPatch.timesNotVisitedTitan != 0)
+                if (timesNotVisitedTitan != 0)
                 {
-                    string replacement = " (+" + MoonPenaltyPatch.timesNotVisitedTitan + "/" + MoonPenaltyPatch.titanHardCap + ")";
+                    string replacement = " (+" + timesNotVisitedTitan + "/" + titanCap + ")";
                     node.displayText = node.displayText.Replace("Titan [planetTime]", "Titan [planetTime]" + replacement);
                 }
 
-                if (MoonPenaltyPatch.timesNotVisitedDine != 0)
+                if (timesNotVisitedDine != 0)
                 {
-                    string replacement = " (+" + MoonPenaltyPatch.timesNotVisitedDine + "/" + MoonPenaltyPatch.dineHardCap + ")";
+                    string replacement = " (+" + timesNotVisitedDine + "/" + dineCap + ")";
                     node.displayText = node.displayText.Replace("Dine [planetTime]", "Dine [planetTime]" + replacement);
                 }
 
-                if (MoonPenaltyPatch.timesNotVisitedRend != 0)
+                if (timesNotVisitedRend != 0)
                 {
-                    string replacement = " (+" + MoonPenaltyPatch.timesNotVisitedRend + "/" + MoonPenaltyPatch.rendHardCap + ")";
+                    string replacement = " (+" + timesNotVisitedRend + "/" + rendCap + ")";
                     node.displayText = node.displayText.Replace("Rend [planetTime]", "Rend [planetTime]" + replacement);
                 }
 
-                if (MoonPenaltyPatch.timesNotVisitedAda != 0)
+                if (timesNotVisitedAda != 0)
                 {
-                    string replacement = " (+" + MoonPenaltyPatch.timesNotVisitedAda + "/" + MoonPenaltyPatch.adaHardCap + ")";
+                    string replacement = " (+" + timesNotVisitedAda + "/" + adaCap + ")";
                     node.displayText = node.displayText.Replace("Adamance [planetTime]", "Adamance [planetTime]" + replacement);
                 }
 
-                if (MoonPenaltyPatch.timesNotVisitedMarch != 0)
+                if (timesNotVisitedMarch != 0)
                 {
-                    string replacement = " (+" + MoonPenaltyPatch.timesNotVisitedMarch + "/" + MoonPenaltyPatch.marchHardCap + ")";
+                    string replacement = " (+" + timesNotVisitedMarch + "/" + marchCap + ")";
                     node.displayText = node.displayText.Replace("March [planetTime]", "March [planetTime]" + replacement);
                 }
 
-                if (MoonPenaltyPatch.timesNotVisitedOff != 0)
+                if (timesNotVisitedOff != 0)
                 {
-                    string replacement = " (+" + MoonPenaltyPatch.timesNotVisitedOff + "/" + MoonPenaltyPatch.offHardCap + ")";
+                    string replacement = " (+" + timesNotVisitedOff + "/" + offCap + ")";
                     node.displayText = node.displayText.Replace("Offense [planetTime]", "Offense [planetTime]" + replacement);
                 }
 
-                if (MoonPenaltyPatch.timesNotVisitedVow != 0)
+                if (timesNotVisitedVow != 0)
                 {
-                    string replacement = " (+" + MoonPenaltyPatch.timesNotVisitedVow + "/" + MoonPenaltyPatch.vowHardCap + ")";
+                    string replacement = " (+" + timesNotVisitedVow + "/" + vowCap + ")";
                     node.displayText = node.displayText.Replace("Vow [planetTime]", "Vow [planetTime]" + replacement);
                 }
 
-                if (MoonPenaltyPatch.timesNotVisitedAss != 0)
+                if (timesNotVisitedAss != 0)
                 {
-                    string replacement = " (+" + MoonPenaltyPatch.timesNotVisitedAss + "/" + MoonPenaltyPatch.assHardCap + ")";
+                    string replacement = " (+" + timesNotVisitedAss + "/" + assCap + ")";
                     node.displayText = node.displayText.Replace("Assurance [planetTime]", "Assurance [planetTime]" + replacement);
                 }
 
-                if (MoonPenaltyPatch.timesNotVisitedExp != 0)
+                if (timesNotVisitedExp != 0)
                 {
-                    string replacement = " (+" + MoonPenaltyPatch.timesNotVisitedExp + "/" + MoonPenaltyPatch.expHardCap + ")";
+                    string replacement = " (+" + timesNotVisitedExp + "/" + expCap + ")";
                     node.displayText = node.displayText.Replace("Experimentation [planetTime]", "Experimentation [planetTime]" + replacement);
                 }
 
@@ -205,23 +207,23 @@ namespace Nachito.LunarRework.Patches
             switch (node.name) 
             {
                 case "8routeConfirm":
-                    node.itemCost = MoonPenaltyPatch.titanBasePrice;
+                    node.itemCost = titPrice;
                     break;
 
                 case "68routeConfirm":
-                    node.itemCost = MoonPenaltyPatch.artBasePrice;
+                    node.itemCost = artPrice;
                     break;
 
                 case "7routeConfirm":
-                    node.itemCost = MoonPenaltyPatch.dineBasePrice;
+                    node.itemCost = dinePrice;
                     break;
 
                 case "85routeConfirm":
-                    node.itemCost = MoonPenaltyPatch.rendBasePrice;
+                    node.itemCost = rendPrice;
                     break;
 
                 case "5routeConfirm":
-                    node.itemCost = MoonPenaltyPatch.embBasePrice;
+                    node.itemCost = embPrice;
                     break;
 
             }
