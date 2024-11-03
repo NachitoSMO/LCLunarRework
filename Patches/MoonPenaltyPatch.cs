@@ -177,7 +177,8 @@ namespace Nachito.LunarRework.Patches
             }
 
             ServerStuff.SyncVarsServerRpc(timesNotVisitedExp, timesNotVisitedAss, timesNotVisitedVow, timesNotVisitedOff, timesNotVisitedMarch, timesNotVisitedAda, timesNotVisitedRend, timesNotVisitedDine, timesNotVisitedTitan, timesNotVisitedEmb, timesNotVisitedArtifice, MoonPricePatch.rebirthAmount, rebirthMoney, TimeOfDayPatch.shouldRebirth,
-                titPrice, embPrice, artPrice, rendPrice, dinePrice);
+                titPrice, embPrice, artPrice, rendPrice, dinePrice, expCap, assCap, vowCap, offCap, marchCap, adaCap, rendCap, dineCap, titanCap, embCap, artCap, expMult, assMult,
+                    vowMult, offMult, marchMult, adaMult, rendMult, dineMult, titanMult, embMult, artMult);
 
 
         }
@@ -295,7 +296,8 @@ namespace Nachito.LunarRework.Patches
         {
             if (__instance.IsHost)
                 ServerStuff.SyncVarsServerRpc(timesNotVisitedExp, timesNotVisitedAss, timesNotVisitedVow, timesNotVisitedOff, timesNotVisitedMarch, timesNotVisitedAda, timesNotVisitedRend, timesNotVisitedDine, timesNotVisitedTitan, timesNotVisitedEmb, timesNotVisitedArtifice, MoonPricePatch.rebirthAmount, rebirthMoney, TimeOfDayPatch.shouldRebirth,
-                    titPrice, embPrice, artPrice, rendPrice, dinePrice);
+                    titPrice, embPrice, artPrice, rendPrice, dinePrice, expCap, assCap, vowCap, offCap, marchCap, adaCap, rendCap, dineCap, titanCap, embCap, artCap, expMult, assMult,
+                    vowMult, offMult, marchMult, adaMult, rendMult, dineMult, titanMult, embMult, artMult);
         }
     }
 }
