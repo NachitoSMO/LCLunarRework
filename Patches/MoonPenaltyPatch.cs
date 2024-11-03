@@ -176,9 +176,7 @@ namespace Nachito.LunarRework.Patches
                 __instance.ChangeLevelServerRpc(3, terminal.groupCredits);
             }
 
-            ServerStuff.SyncVarsServerRpc(timesNotVisitedExp, timesNotVisitedAss, timesNotVisitedVow, timesNotVisitedOff, timesNotVisitedMarch, timesNotVisitedAda, timesNotVisitedRend, timesNotVisitedDine, timesNotVisitedTitan, timesNotVisitedEmb, timesNotVisitedArtifice, MoonPricePatch.rebirthAmount, rebirthMoney, TimeOfDayPatch.shouldRebirth,
-                titPrice, embPrice, artPrice, rendPrice, dinePrice, expCap, assCap, vowCap, offCap, marchCap, adaCap, rendCap, dineCap, titanCap, embCap, artCap, expMult, assMult,
-                    vowMult, offMult, marchMult, adaMult, rendMult, dineMult, titanMult, embMult, artMult);
+            ServerStuff.SyncVarsServerRpc(timesNotVisitedExp, timesNotVisitedAss, timesNotVisitedVow, timesNotVisitedOff, timesNotVisitedMarch, timesNotVisitedAda, timesNotVisitedRend, timesNotVisitedDine, timesNotVisitedTitan, timesNotVisitedEmb, timesNotVisitedArtifice, MoonPricePatch.rebirthAmount, rebirthMoney, TimeOfDayPatch.shouldRebirth);
 
 
         }
@@ -295,9 +293,9 @@ namespace Nachito.LunarRework.Patches
         static void SyncVars(StartOfRound __instance)
         {
             if (__instance.IsHost)
-                ServerStuff.SyncVarsServerRpc(timesNotVisitedExp, timesNotVisitedAss, timesNotVisitedVow, timesNotVisitedOff, timesNotVisitedMarch, timesNotVisitedAda, timesNotVisitedRend, timesNotVisitedDine, timesNotVisitedTitan, timesNotVisitedEmb, timesNotVisitedArtifice, MoonPricePatch.rebirthAmount, rebirthMoney, TimeOfDayPatch.shouldRebirth,
-                    titPrice, embPrice, artPrice, rendPrice, dinePrice, expCap, assCap, vowCap, offCap, marchCap, adaCap, rendCap, dineCap, titanCap, embCap, artCap, expMult, assMult,
-                    vowMult, offMult, marchMult, adaMult, rendMult, dineMult, titanMult, embMult, artMult);
+                ServerStuff.SyncVarsServerRpc(timesNotVisitedExp, timesNotVisitedAss, timesNotVisitedVow, timesNotVisitedOff, timesNotVisitedMarch, timesNotVisitedAda, timesNotVisitedRend, timesNotVisitedDine, timesNotVisitedTitan, timesNotVisitedEmb, timesNotVisitedArtifice, MoonPricePatch.rebirthAmount, rebirthMoney, TimeOfDayPatch.shouldRebirth);
+                ServerStuff.SyncMultsAndCapsServerRpc(expCap, assCap, vowCap, offCap, marchCap, adaCap, rendCap, dineCap, titanCap, embCap, artCap, expMult, assMult,
+                    vowMult, offMult, marchMult, adaMult, rendMult, dineMult, titanMult, embMult, artMult, titPrice, embPrice, artPrice, rendPrice, dinePrice);
         }
     }
 }
