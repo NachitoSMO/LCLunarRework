@@ -57,7 +57,7 @@ namespace Nachito.LunarRework
 
             Config.SaveOnConfigSet = false;
 
-            rebirthCost = Config.Bind("General", "Rebirth Cost", 8000, "The cost for performaing a 'rebirth'.");
+            rebirthCost = Config.Bind("General", "Rebirth Cost", 8000, "The cost of performing a 'rebirth'.");
             expHardCap = Config.Bind("Hard Caps", "Experimentation Cap", 20, "The point in which Experimentation stops recieving extra scrap");
             assHardCap = Config.Bind("Hard Caps", "Assurance Cap", 15, "The point in which Assurance stops recieving extra scrap");
             vowHardCap = Config.Bind("Hard Caps", "Vow Cap", 16, "The point in which Vow stops recieving extra scrap");
