@@ -29,6 +29,18 @@ namespace Nachito.LunarRework.Patches
             assCap = assHardCap.Value;
             vowCap = vowHardCap.Value;
 
+            embMult = embScrapMultiplier.Value;
+            artMult = artScrapMultiplier.Value;
+            titanMult = titanScrapMultiplier.Value;
+            rendMult = rendScrapMultiplier.Value;
+            dineMult = dineScrapMultiplier.Value;
+            adaMult = adaScrapMultiplier.Value;
+            marchMult = marchScrapMultiplier.Value;
+            offMult = offScrapMultiplier.Value;
+            expMult = expScrapMultiplier.Value;
+            assMult = assScrapMultiplier.Value;
+            vowMult = vowScrapMultiplier.Value;
+
         }
     }
 }
