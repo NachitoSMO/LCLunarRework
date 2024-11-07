@@ -29,7 +29,7 @@ This mod aims to make visiting different planets during gameplay more rewarding 
 
 ## Notes
 
-This mod depends on StaticNetcodeLib by xilophor, TerminalAPI by NotAtomicBomb and Interactive_Terminal_API by WhiteSpike.
+This mod depends on StaticNetcodeLib by xilophor, TerminalAPI by NotAtomicBomb, Interactive_Terminal_API by WhiteSpike, and LethalLevelLoader by IAmBatby.
 
 As of 0.0.3, many of this mods' values can be configured. **(Many values can only be configured before starting a new save file. To create a configuration file, open any save file, then close the game to edit the values)**
 
