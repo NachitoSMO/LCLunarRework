@@ -1,5 +1,8 @@
-﻿using BepInEx.Configuration;
-using HarmonyLib;
+﻿using HarmonyLib;
+using LethalLevelLoader;
+using Nachito.LunarRework.Plugin;
+using System.Linq;
+using Unity.Netcode;
 using UnityEngine;
 using static Nachito.LunarRework.Nachito_LunarRework;
 
@@ -8,175 +11,146 @@ namespace Nachito.LunarRework.Patches
     [HarmonyPatch(typeof(StartOfRound))]
     public class MoonPenaltyPatch
     {
-        public static int timesNotVisitedTitan;
+
+        [HarmonyPatch(nameof(StartOfRound.OnPlayerConnectedClientRpc))]
+        [HarmonyPostfix]
+        static void Sync()
+        {
+            if (NetworkManager.Singleton.IsHost)
+            {
+                ServerStuff.SyncRebirthVarsServerRpc(MoonPricePatch.rebirthAmount, rebirthMoney, TimeOfDayPatch.shouldRebirth);
+
+
+                foreach (ExtendedLevel level in PatchedContent.ExtendedLevels)
+                {
+                    var moon = ModMoons.Find(m => m.Name == level.name.Replace("ExtendedLevel", string.Empty));
+                    if (moon != null)
+                    {
+                        int price = moon.Price;
+                        ServerStuff.SetPriceOfMoonsServerRpc(price, level.name);
+                    }
+                    
+                }
+
+                var copy = ModMoons.ToList();
+                foreach (Moons moon in copy)
+                {
+                    ServerStuff.ClearMoonsAndSyncClientRpc(moon.Name, moon.Cap, moon.Mult, moon.Price, moon.TimesNotVisited, moon.DefaultCap, moon.DefaultMult);
+                }
+            }
         
-        public static int timesNotVisitedArtifice;
-        
-        public static int timesNotVisitedDine;
+        }
 
-        public static int timesNotVisitedRend;
+        [HarmonyPatch(nameof(StartOfRound.Start))]
+        [HarmonyPostfix]
+        static void onStart()
+        {
+            if (!NetworkManager.Singleton.IsHost)
+                return;
 
-        public static int timesNotVisitedEmb;
+            foreach (ExtendedLevel moon in PatchedContent.ExtendedLevels)
+            {
+                string name = moon.name.Replace("ExtendedLevel", string.Empty);
 
-        public static int timesNotVisitedAda;
+                var entries = Instance.Config.GetConfigEntries().ToList();
+                var cap = entries.Find(c => c.Definition.Key.Contains(name + "Cap"));
+                var mult = entries.Find(m => m.Definition.Key.Contains(name + "Gain"));
+                var price = entries.Find(p => p.Definition.Key.Contains(name + "Price"));
 
-        public static int timesNotVisitedMarch;
+                if (cap == null && mult == null && price == null)
+                {
+                    if (name.Equals("Experimentation"))
+                        Instance.AddConfigs(name, 20, 1, 0);
+                    if (name.Equals("Assurance"))
+                        Instance.AddConfigs(name, 15, 1, 0);
+                    if (name.Equals("Vow"))
+                        Instance.AddConfigs(name, 16, 1, 0);
+                    if (name.Equals("Offense"))
+                        Instance.AddConfigs(name, 18, 2, 0);
+                    if (name.Equals("March"))
+                        Instance.AddConfigs(name, 20, 2, 0);
+                    if (name.Equals("Adamance"))
+                        Instance.AddConfigs(name, 18, 3, 0);
+                    if (name.Equals("Rend"))
+                        Instance.AddConfigs(name, 12, 2, 300);
+                    if (name.Equals("Dine"))
+                        Instance.AddConfigs(name, 20, 2, 300);
+                    if (name.Equals("Titan"))
+                        Instance.AddConfigs(name, 15, 3, 500);
+                    if (name.Equals("Embrion"))
+                        Instance.AddConfigs(name, 30, 2, 70);
+                    if (name.Equals("Artifice"))
+                        Instance.AddConfigs(name, 4, 1, 600);
 
-        public static int timesNotVisitedOff;
- 
-        public static int timesNotVisitedVow;
-    
-        public static int timesNotVisitedAss;
-     
-        public static int timesNotVisitedExp;
+                    if (!name.Equals("Experimentation") && !name.Equals("Assurance") && !name.Equals("Vow") && !name.Equals("Offense") && !name.Equals("March") &&
+                        !name.Equals("Adamance") && !name.Equals("Rend") && !name.Equals("Dine") && !name.Equals("Titan") && !name.Equals("Embrion") && !name.Equals("Artifice"))
+                    {
+                        Instance.AddConfigs(name, 10, 1, moon.RoutePrice);
+                    }
 
 
-        public static ConfigEntry<int>? titanScrapMultiplier;
-        public static ConfigEntry<int>? titanHardCap;
-        public static ConfigEntry<int>? titanBasePrice;
-        public static ConfigEntry<int>? artScrapMultiplier;
-        public static ConfigEntry<int>? artHardCap; 
-        public static ConfigEntry<int>? artBasePrice;
-        public static ConfigEntry<int>? dineScrapMultiplier;
-        public static ConfigEntry<int>? dineHardCap; 
-        public static ConfigEntry<int>? dineBasePrice;
-        public static ConfigEntry<int>? rendScrapMultiplier;
-        public static ConfigEntry<int>? rendHardCap; 
-        public static ConfigEntry<int>? rendBasePrice;
-        public static ConfigEntry<int>? embScrapMultiplier;
-        public static ConfigEntry<int>? embHardCap; 
-        public static ConfigEntry<int>? embBasePrice;
-        public static ConfigEntry<int>? adaScrapMultiplier;
-        public static ConfigEntry<int>? adaHardCap;
-        public static ConfigEntry<int>? marchScrapMultiplier;
-        public static ConfigEntry<int>? marchHardCap;
-        public static ConfigEntry<int>? offScrapMultiplier;
-        public static ConfigEntry<int>? offHardCap;
-        public static ConfigEntry<int>? vowScrapMultiplier;
-        public static ConfigEntry<int>? vowHardCap;
-        public static ConfigEntry<int>? assScrapMultiplier;
-        public static ConfigEntry<int>? assHardCap;
-        public static ConfigEntry<int>? expScrapMultiplier;
-        public static ConfigEntry<int>? expHardCap;
+                    var c = CapConfig.Find(c => c.Definition.Key == name + " Cap");
+                    var mul = MultConfig.Find(m => m.Definition.Key == name + " Gain");
+                    var p = PriceConfig.Find(p => p.Definition.Key == name + " Price");
+                    SyncRebirth();
+                    if (c != null && mul != null && p != null)
+                    {
+                        ModMoons.Add(new Moons(LethalModDataLib.Features.SaveLoadHandler.LoadData(name + "Scrap", LethalModDataLib.Enums.SaveLocation.CurrentSave, 0), c.Value * (MoonPricePatch.rebirthAmount + 1), mul.Value * (MoonPricePatch.rebirthAmount + 1), p.Value, name, c.Value, mul.Value));
+                        moon.RoutePrice = p.Value;
+                    }
+                } else
+                {
+                    ModMoons.Add(new Moons(LethalModDataLib.Features.SaveLoadHandler.LoadData(name + "Scrap", LethalModDataLib.Enums.SaveLocation.CurrentSave, 0), (int) cap.BoxedValue * (MoonPricePatch.rebirthAmount + 1), (int) mult.BoxedValue * (MoonPricePatch.rebirthAmount + 1), (int) price.BoxedValue, name, (int) cap.BoxedValue, (int) mult.BoxedValue));
+                    moon.RoutePrice = (int) price.BoxedValue;
+
+                }
+            }
+            Instance.ClearUnusedEntries(Instance.Config);
+            Instance.Config.SaveOnConfigSet = true;
+        }
 
         [HarmonyPatch("SetShipReadyToLand")]
         [HarmonyPostfix]
         static void IncreaseMoonScrap(StartOfRound __instance)
         {
-            if (__instance.currentLevelID == 3)
+
+            if (__instance.currentLevelID == 3 || !NetworkManager.Singleton.IsHost)
                 return;
 
-            if (!__instance.IsHost)
-                return;
-            
 
-            if (__instance.currentLevelID != 9)
+            foreach (Moons moon in ModMoons)
             {
-                if (ES3.Load<int>("TitanScrap", RoundManagerPatch.currentSave) < titanCap)
+                if (__instance.currentLevel.name.Replace("Level", string.Empty) != moon.Name)
                 {
-                    ES3.Save("TitanScrap", ES3.Load<int>("TitanScrap", RoundManagerPatch.currentSave) + 1 * titanMult, RoundManagerPatch.currentSave);
-                    timesNotVisitedTitan = ES3.Load<int>("TitanScrap", RoundManagerPatch.currentSave);
+                    int timesNotVisited = LethalModDataLib.Features.SaveLoadHandler.LoadData(moon.Name + "Scrap", LethalModDataLib.Enums.SaveLocation.CurrentSave, 0);
+
+                    if (timesNotVisited < moon.Cap)
+                    {
+                        timesNotVisited += 1 * moon.Mult;
+                        LethalModDataLib.Features.SaveLoadHandler.SaveData(timesNotVisited, moon.Name + "Scrap", LethalModDataLib.Enums.SaveLocation.CurrentSave);
+
+                        moon.TimesNotVisited = timesNotVisited;
+                    }
+                } else
+                {
+                    LethalModDataLib.Features.SaveLoadHandler.SaveData(0, moon.Name + "Scrap", LethalModDataLib.Enums.SaveLocation.CurrentSave);
+
+                    moon.TimesNotVisited = 0;
                 }
             }
 
-            if (__instance.currentLevelID != 10)
+            var copy = ModMoons.ToList();
+            foreach (Moons moon in copy)
             {
-                if (ES3.Load<int>("ArtScrap", RoundManagerPatch.currentSave) < artCap)
-                {
-                    ES3.Save("ArtScrap", ES3.Load<int>("ArtScrap", RoundManagerPatch.currentSave) + 1 * artCap, RoundManagerPatch.currentSave);
-                    timesNotVisitedArtifice = ES3.Load<int>("ArtScrap", RoundManagerPatch.currentSave);
-                }
+                ServerStuff.ClearMoonsAndSyncClientRpc(moon.Name, moon.Cap, moon.Mult, moon.Price, moon.TimesNotVisited, moon.DefaultCap, moon.DefaultMult);
             }
 
-            if (__instance.currentLevelID != 7)
-            {
-                if (ES3.Load<int>("DineScrap", RoundManagerPatch.currentSave) < dineCap)
-                {
-                    ES3.Save("DineScrap", ES3.Load<int>("DineScrap", RoundManagerPatch.currentSave) + 1 * dineMult, RoundManagerPatch.currentSave);
-                    timesNotVisitedDine = ES3.Load<int>("DineScrap", RoundManagerPatch.currentSave);
-                }
-            }
-
-            if (__instance.currentLevelID != 6)
-            {
-                if (ES3.Load<int>("RendScrap", RoundManagerPatch.currentSave) < rendCap)
-                {
-                    ES3.Save("RendScrap", ES3.Load<int>("RendScrap", RoundManagerPatch.currentSave) + 1 * rendMult, RoundManagerPatch.currentSave);
-                    timesNotVisitedRend = ES3.Load<int>("RendScrap", RoundManagerPatch.currentSave);
-                }
-            }
-
-            if (__instance.currentLevelID != 12)
-            {
-                if (ES3.Load<int>("EmbrionScrap", RoundManagerPatch.currentSave) < embCap)
-                {
-                    ES3.Save("EmbrionScrap", ES3.Load<int>("EmbrionScrap", RoundManagerPatch.currentSave) + 1 * embMult, RoundManagerPatch.currentSave);
-                    timesNotVisitedEmb = ES3.Load<int>("EmbrionScrap", RoundManagerPatch.currentSave);
-                }
-            }
-
-            if (__instance.currentLevelID != 5)
-            {
-                if (ES3.Load<int>("AdaScrap", RoundManagerPatch.currentSave) < adaCap)
-                {
-                    ES3.Save("AdaScrap", ES3.Load<int>("AdaScrap", RoundManagerPatch.currentSave) + 1 * adaMult, RoundManagerPatch.currentSave);
-                    timesNotVisitedAda = ES3.Load<int>("AdaScrap", RoundManagerPatch.currentSave);
-                }
-            }
-
-            if (__instance.currentLevelID != 4)
-            {
-                if (ES3.Load<int>("MarchScrap", RoundManagerPatch.currentSave) < marchCap)
-                {
-                    ES3.Save("MarchScrap", ES3.Load<int>("MarchScrap", RoundManagerPatch.currentSave) + 1 * marchMult, RoundManagerPatch.currentSave);
-                    timesNotVisitedMarch = ES3.Load<int>("MarchScrap", RoundManagerPatch.currentSave);
-                }
-            }
-
-            if (__instance.currentLevelID != 8)
-            {
-                if (ES3.Load<int>("OffScrap", RoundManagerPatch.currentSave) < offCap)
-                {
-                    ES3.Save("OffScrap", ES3.Load<int>("OffScrap", RoundManagerPatch.currentSave) + 1 * offMult, RoundManagerPatch.currentSave);
-                    timesNotVisitedOff = ES3.Load<int>("OffScrap", RoundManagerPatch.currentSave);
-                }
-            }
-
-            if (__instance.currentLevelID != 2)
-            {
-                if (ES3.Load<int>("VowScrap", RoundManagerPatch.currentSave) < vowCap)
-                {
-                    ES3.Save("VowScrap", ES3.Load<int>("VowScrap", RoundManagerPatch.currentSave) + 1 * vowMult, RoundManagerPatch.currentSave);
-                    timesNotVisitedVow = ES3.Load<int>("VowScrap", RoundManagerPatch.currentSave);
-                }
-            }
-
-            if (__instance.currentLevelID != 1)
-            {
-                if (ES3.Load<int>("AssScrap", RoundManagerPatch.currentSave) < assCap)
-                {
-                    ES3.Save("AssScrap", ES3.Load<int>("AssScrap", RoundManagerPatch.currentSave) + 1 * assMult, RoundManagerPatch.currentSave);
-                    timesNotVisitedAss = ES3.Load<int>("AssScrap", RoundManagerPatch.currentSave);
-                }
-            }
-
-            if (__instance.currentLevelID != 0)
-            {
-                if (ES3.Load<int>("ExpScrap", RoundManagerPatch.currentSave) < expCap)
-                {
-                    ES3.Save("ExpScrap", ES3.Load<int>("ExpScrap", RoundManagerPatch.currentSave) + 1 * expMult, RoundManagerPatch.currentSave);
-                    timesNotVisitedExp = ES3.Load<int>("ExpScrap", RoundManagerPatch.currentSave);
-                }
-            }
-
-            if (__instance.currentLevel.levelID != 3)
+            if (__instance.currentLevel.levelID != 3 && ShouldAutoReroute.Value)
             {
                 var terminal = Object.FindObjectOfType<Terminal>();
                 __instance.ChangeLevel(3);
                 __instance.ChangeLevelServerRpc(3, terminal.groupCredits);
             }
-
-            ServerStuff.SyncVarsServerRpc(timesNotVisitedExp, timesNotVisitedAss, timesNotVisitedVow, timesNotVisitedOff, timesNotVisitedMarch, timesNotVisitedAda, timesNotVisitedRend, timesNotVisitedDine, timesNotVisitedTitan, timesNotVisitedEmb, timesNotVisitedArtifice, MoonPricePatch.rebirthAmount, rebirthMoney, TimeOfDayPatch.shouldRebirth);
 
 
         }
@@ -185,119 +159,46 @@ namespace Nachito.LunarRework.Patches
         [HarmonyPostfix]
         static void ChangeScrap(StartOfRound __instance)
         {
-            int TitanMinScrap = StartOfRound.Instance.levels[9].minScrap;
-            int TitanMaxScrap = StartOfRound.Instance.levels[9].maxScrap;
-            int ArtMinScrap = StartOfRound.Instance.levels[10].minScrap;
-            int ArtMaxScrap = StartOfRound.Instance.levels[10].maxScrap;
-            int DineMinScrap = StartOfRound.Instance.levels[7].minScrap;
-            int DineMaxScrap = StartOfRound.Instance.levels[7].maxScrap;
-            int RendMinScrap = StartOfRound.Instance.levels[6].minScrap;
-            int RendMaxScrap = StartOfRound.Instance.levels[6].maxScrap;
-            int EmbMinScrap = StartOfRound.Instance.levels[12].minScrap;
-            int EmbMaxScrap = StartOfRound.Instance.levels[12].maxScrap;
-            int AdaMinScrap = StartOfRound.Instance.levels[5].minScrap;
-            int AdaMaxScrap = StartOfRound.Instance.levels[5].maxScrap;
-            int MarchMinScrap = StartOfRound.Instance.levels[4].minScrap;
-            int MarchMaxScrap = StartOfRound.Instance.levels[4].maxScrap;
-            int OffMinScrap = StartOfRound.Instance.levels[8].minScrap;
-            int OffMaxScrap = StartOfRound.Instance.levels[8].maxScrap;
-            int VowMinScrap = StartOfRound.Instance.levels[2].minScrap;
-            int VowMaxScrap = StartOfRound.Instance.levels[2].maxScrap;
-            int AssMinScrap = StartOfRound.Instance.levels[1].minScrap;
-            int AssMaxScrap = StartOfRound.Instance.levels[1].maxScrap;
-            int ExpMinScrap = StartOfRound.Instance.levels[0].minScrap;
-            int ExpMaxScrap = StartOfRound.Instance.levels[0].maxScrap;
-            switch (__instance.currentLevelID)
+
+            if (__instance.currentLevelID == 3 || !NetworkManager.Singleton.IsHost)
+                return;
+
+            foreach (Moons moon in ModMoons)
             {
-                case 9:
-                    __instance.currentLevel.minScrap = TitanMinScrap + timesNotVisitedTitan;
-                    __instance.currentLevel.maxScrap = TitanMaxScrap + timesNotVisitedTitan;
-                    ES3.Save("TitanScrap", 0, RoundManagerPatch.currentSave);
-                    timesNotVisitedTitan = 0;
-                    break;
-
-                case 10:
-                    __instance.currentLevel.minScrap = ArtMinScrap + timesNotVisitedArtifice + 5;
-                    __instance.currentLevel.maxScrap = ArtMaxScrap + timesNotVisitedArtifice + 7;
-                    ES3.Save("ArtScrap", 0, RoundManagerPatch.currentSave);
-                    timesNotVisitedArtifice = 0;
-                    break;
-
-                case 7:
-                    __instance.currentLevel.minScrap = DineMinScrap + timesNotVisitedDine;
-                    __instance.currentLevel.maxScrap = DineMaxScrap + timesNotVisitedDine;
-                    ES3.Save("DineScrap", 0, RoundManagerPatch.currentSave);
-                    timesNotVisitedDine = 0;
-                    break;
-
-                case 6:
-                    __instance.currentLevel.minScrap = RendMinScrap + timesNotVisitedRend;
-                    __instance.currentLevel.maxScrap = RendMaxScrap + timesNotVisitedRend;
-                    ES3.Save("RendScrap", 0, RoundManagerPatch.currentSave);
-                    timesNotVisitedRend = 0;
-                    break;
-
-                case 12:
-                    __instance.currentLevel.minScrap = EmbMinScrap + timesNotVisitedEmb;
-                    __instance.currentLevel.maxScrap = EmbMaxScrap + timesNotVisitedEmb;
-                    ES3.Save("EmbrionScrap", 0, RoundManagerPatch.currentSave);
-                    timesNotVisitedEmb = 0;
-                    break;
-
-                case 5:
-                    __instance.currentLevel.minScrap = AdaMinScrap + timesNotVisitedAda;
-                    __instance.currentLevel.maxScrap = AdaMaxScrap + timesNotVisitedAda;
-                    ES3.Save("AdaScrap", 0, RoundManagerPatch.currentSave);
-                    timesNotVisitedAda = 0;
-                    break;
-
-                case 4:
-                    __instance.currentLevel.minScrap = MarchMinScrap + timesNotVisitedMarch;
-                    __instance.currentLevel.maxScrap = MarchMaxScrap + timesNotVisitedMarch;
-                    ES3.Save("MarchScrap", 0, RoundManagerPatch.currentSave);
-                    timesNotVisitedMarch = 0;
-                    break;
-
-                case 8:
-                    __instance.currentLevel.minScrap = OffMinScrap + timesNotVisitedOff;
-                    __instance.currentLevel.maxScrap = OffMaxScrap + timesNotVisitedOff;
-                    ES3.Save("OffScrap", 0, RoundManagerPatch.currentSave);
-                    timesNotVisitedOff = 0;
-                    break;
-
-                case 2:
-                    __instance.currentLevel.minScrap = VowMinScrap + timesNotVisitedVow;
-                    __instance.currentLevel.maxScrap = VowMaxScrap + timesNotVisitedVow;
-                    ES3.Save("VowScrap", 0, RoundManagerPatch.currentSave);
-                    timesNotVisitedVow = 0;
-                    break;
-
-                case 1:
-                    __instance.currentLevel.minScrap = AssMinScrap + timesNotVisitedAss;
-                    __instance.currentLevel.maxScrap = AssMaxScrap + timesNotVisitedAss;
-                    ES3.Save("AssScrap", 0, RoundManagerPatch.currentSave);
-                    timesNotVisitedAss = 0;
-                    break;
-
-                case 0:
-                    __instance.currentLevel.minScrap = ExpMinScrap + timesNotVisitedExp;
-                    __instance.currentLevel.maxScrap = ExpMaxScrap + timesNotVisitedExp;
-                    ES3.Save("ExpScrap", 0, RoundManagerPatch.currentSave);
-                    timesNotVisitedExp = 0;
-                    break;
+                if (__instance.currentLevel.name.Replace("Level", string.Empty) == moon.Name)
+                {
+                    __instance.currentLevel.minScrap += moon.TimesNotVisited;
+                    __instance.currentLevel.maxScrap += moon.TimesNotVisited;
+                }
             }
         }
 
-        [HarmonyPatch("OnPlayerConnectedClientRpc")]
-        [HarmonyPostfix]
-        static void SyncVars(StartOfRound __instance)
+        public static void SyncRebirth()
         {
-            if (__instance.IsHost)
+            if (LethalModDataLib.Features.SaveLoadHandler.LoadData("rebirths", LethalModDataLib.Enums.SaveLocation.CurrentSave, 0) == 0)
             {
-                ServerStuff.SyncVarsServerRpc(timesNotVisitedExp, timesNotVisitedAss, timesNotVisitedVow, timesNotVisitedOff, timesNotVisitedMarch, timesNotVisitedAda, timesNotVisitedRend, timesNotVisitedDine, timesNotVisitedTitan, timesNotVisitedEmb, timesNotVisitedArtifice, MoonPricePatch.rebirthAmount, rebirthMoney, TimeOfDayPatch.shouldRebirth);
-                ServerStuff.SyncMultsAndCapsServerRpc(expCap, assCap, vowCap, offCap, marchCap, adaCap, rendCap, dineCap, titanCap, embCap, artCap, expMult, assMult,
-                    vowMult, offMult, marchMult, adaMult, rendMult, dineMult, titanMult, embMult, artMult, titPrice, embPrice, artPrice, rendPrice, dinePrice);
+                LethalModDataLib.Features.SaveLoadHandler.SaveData(0, "rebirths", LethalModDataLib.Enums.SaveLocation.CurrentSave);
+                MoonPricePatch.rebirthAmount = 0;
             }
+            else
+                MoonPricePatch.rebirthAmount = LethalModDataLib.Features.SaveLoadHandler.LoadData("rebirths", LethalModDataLib.Enums.SaveLocation.CurrentSave, 0);
+
+            if (LethalModDataLib.Features.SaveLoadHandler.LoadData("rebirthCost", LethalModDataLib.Enums.SaveLocation.CurrentSave, MoonPricePatch.rebirthCost.Value) == MoonPricePatch.rebirthCost.Value)
+            {
+                LethalModDataLib.Features.SaveLoadHandler.SaveData(MoonPricePatch.rebirthCost.Value, "rebirthCost", LethalModDataLib.Enums.SaveLocation.CurrentSave);
+                rebirthMoney = MoonPricePatch.rebirthCost.Value;
+            }
+            else
+                rebirthMoney = LethalModDataLib.Features.SaveLoadHandler.LoadData("rebirthCost", LethalModDataLib.Enums.SaveLocation.CurrentSave, MoonPricePatch.rebirthCost.Value);
+
+            if (LethalModDataLib.Features.SaveLoadHandler.LoadData("shouldRebirth", LethalModDataLib.Enums.SaveLocation.CurrentSave, defaultValue: false) == false)
+            {
+                LethalModDataLib.Features.SaveLoadHandler.SaveData(false, "shouldRebirth", LethalModDataLib.Enums.SaveLocation.CurrentSave);
+                TimeOfDayPatch.shouldRebirth = false;
+            } 
+            else
+                TimeOfDayPatch.shouldRebirth = LethalModDataLib.Features.SaveLoadHandler.LoadData("shouldRebirth", LethalModDataLib.Enums.SaveLocation.CurrentSave, false);
+            
         }
     }
 }
