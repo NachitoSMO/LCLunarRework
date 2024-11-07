@@ -100,6 +100,7 @@ namespace Nachito.LunarRework.Patches
                     }
                 } else
                 {
+                    SyncRebirth();
                     ModMoons.Add(new Moons(LethalModDataLib.Features.SaveLoadHandler.LoadData(name + "Scrap", LethalModDataLib.Enums.SaveLocation.CurrentSave, 0), (int) cap.BoxedValue * (MoonPricePatch.rebirthAmount + 1), (int) mult.BoxedValue * (MoonPricePatch.rebirthAmount + 1), (int) price.BoxedValue, name, (int) cap.BoxedValue, (int) mult.BoxedValue));
                     moon.RoutePrice = (int) price.BoxedValue;
 
